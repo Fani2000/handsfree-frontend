@@ -1,0 +1,27 @@
+/**
+ * src/styles/settings.scss
+ *
+ * Configures SASS variables and Vuetify overwrites
+ */
+
+// https://vuetifyjs.com/features/sass-variables/`
+// @use 'vuetify/settings' with (
+//   $color-pack: false
+// );
+
+@use 'vuetify/settings' with (
+  $tabs-height: 60px,
+  $tabs-stacked-height: 72px,
+  $table-font-size: 14px,
+  $table-row-height: 60px,
+  $table-row-font-size: 14px,
+  $table-border-color: var(--main-grey-04),
+  $table-header-font-size: 12px,
+  $table-header-font-weight: 900,
+  $table-header-height: 40px,
+  $input-font-size: 14px,
+  $input-font-weight: 400,
+  $button-font-size: 12px,
+  $button-height: 70px,
+  $button-font-weight: 400
+);

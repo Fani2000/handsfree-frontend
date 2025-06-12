@@ -1,0 +1,43 @@
+﻿trigger:
+  branches:
+    include:
+      - main # Adjust this to your default branch name (e.g., main or master)
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # ACR Login Server - Replace <ACR-NAME> with your Azure Container Registry name
+  ACR_NAME: "<your-acr-name>" # e.g., myacr
+  IMAGE_NAME: "frontend-app"
+  IMAGE_TAG: "$(Build.BuildId)" # Using the build ID as the image tag
+
+steps:
+  # Step 1: Checkout the code
+  - task: Checkout@1
+
+  # Step 2: Login to the Azure Container Registry (ACR)
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: "<YOUR-AZURE-SUBSCRIPTION>"
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        # Log in to Azure Container Registry
+        az acr login --name $(ACR_NAME)
+
+  # Step 3: Build and push Docker image to ACR
+  - task: Docker@2
+    inputs:
+      containerRegistry:
+        # The container registry service connection created in Azure DevOps
+        serviceConnection: "<YOUR-ACR-SERVICE-CONNECTION>"
+      repository: "$(ACR_NAME).azurecr.io/$(IMAGE_NAME)"
+      command: buildAndPush
+      Dockerfile: frontend/Dockerfile # Path to Dockerfile in the repo
+      tags: "$(IMAGE_TAG)"
+
+  # Step 4: Print the image details (Optional, for logging purposes)
+  - script: |
+      echo "Image: $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(IMAGE_TAG)"
+    displayName: "Print Image Details"
